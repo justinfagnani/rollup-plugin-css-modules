@@ -1,0 +1,51 @@
+{
+  "name": "rollup-plugin-css-modules",
+  "version": "0.0.0",
+  "description": "Rollup support for standard CSS modules",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "build": "wireit",
+    "test": "wireit",
+    "format": "wireit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-virtual": "^3.0.2",
+    "@types/node": "^20.10.5",
+    "prettier": "^3.1.1",
+    "rollup": "^4.9.1",
+    "typescript": "^5.3.3",
+    "wireit": "^0.14.1"
+  },
+  "wireit": {
+    "format": {
+      "command": "prettier src/**/* --write"
+    },
+    "build": {
+      "command": "tsc --pretty",
+      "files": [
+        "tscopnfig.json",
+        "src/**/*.ts"
+      ],
+      "output": [
+        "index.js",
+        "index.js.map",
+        "index.d.ts",
+        "index.d.ts.map",
+        ".tsbuildinfo"
+      ],
+      "clean": "if-file-deleted"
+    },
+    "test": {
+      "command": "node --test-reporter spec test/index_test.js",
+      "dependencies": [
+        "build"
+      ],
+      "files": [],
+      "output": []
+    }
+  }
+}
