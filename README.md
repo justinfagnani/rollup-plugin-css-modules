@@ -166,6 +166,12 @@ Specifiers marked as external in the Rollup config are correctly left unmodified
 
 We can leave CSS external to the JavaScript bundle, in order to take enable the browser to directly parse the CSS, but still bundle all the CSS together while letting each import site receive just the `CSSStyleSheet` object it would have pre-transformation by using [this hack](https://github.com/w3c/csswg-drafts/issues/5629#issuecomment-1401322544) to bundle multiple CSS sheets into one file.
 
+### PostCSS integration
+
+Existing PostCSS Rollup plugins may rely on stylesheets being added to the global document via a `<link>` tag. We could add a PostCSS pass to this plugin so that developers could write CSS that's not supported by browsers natively, or run transforms like Tailwind.
+
+We need to be careful that we don't encourage packages to publish non-standard CSS that requires the use of the transform, however. PostCSS transformation may belong in a separate plugin.
+
 ### Transform import attributes to import assertions
 
 To support Chrome version before they land import attribute support, we could transform just the import assertion syntax into import attributes.
