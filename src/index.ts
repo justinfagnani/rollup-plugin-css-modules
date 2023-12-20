@@ -30,7 +30,7 @@ export const cssModules: PluginImpl = (): Plugin => {
 const stylesheet = new CSSStyleSheet();
 stylesheet.replaceSync(\`${escapedCode}\`);
 export default stylesheet;
-        `;
+`;
       }
       return null;
     },

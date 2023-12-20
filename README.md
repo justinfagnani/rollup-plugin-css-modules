@@ -83,13 +83,13 @@ While the transform is simple and spec compliant, there are two (small) potentia
 
 1. The CSS file can't be dynamic. This is a natural consequence of bundling. With native CSS modules you could import a CSS file from a remote URL or from a file path who's contents could change. With bundling the file is fixed at build time.
 2. The exact same CSS file can't be shared across JS imports and HTML imports. This is also a consequence of bundling. With native CSS modules you can load the CSS file in many different ways: import into JavaScript, with a `<link rel=stylesheet>` HTML tag, or some other CSS loader. With bundling you will have to leave a copy of the CSS as a plain .css file in order to load other ways.
-3. The CSS content is parsed as both JavaScript and CSS. This gives the transform a small performance and memory overhead compared to native CSS modules. On projects that use a similar technique of embedding plain CSS strings into JavaScript and creating `CSSStyleSheet` objects, the overhead was measured to be  small, since parsing strings in JavaScript is very fast.
+3. The CSS content is parsed as both JavaScript and CSS. This gives the transform a small performance and memory overhead compared to native CSS modules. On projects that use a similar technique of embedding plain CSS strings into JavaScript and creating `CSSStyleSheet` objects, the overhead was measured to be  small since parsing strings in JavaScript is very fast.
 4. Dynamic import isn't supported (yet).
 
 ## When to use
 
 1. To use CSS modules in browsers that don't support them
-2. To use CSS modules in Chrome versions that don't support import attributes
+2. To use CSS modules in Chrome versions that support CSS modules but not import attributes
 3. To bundle CSS modules to reduce network requests
 
 ## Brower support for CSS modules
@@ -149,8 +149,7 @@ const loadCSS = (url) => () => {
   const promise = (async () => {
     const response = await fetch(resolvedURL);
     const text = await response.text();
-    await stylesheet.replace(text);
-    return stylesheet;
+    return stylesheet.replace(text);
   })();
   cache.set(resolvedURL, promise);
   return promise;
