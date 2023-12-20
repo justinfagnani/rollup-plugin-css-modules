@@ -94,7 +94,7 @@ While the transform is simple and spec compliant, there are two (small) potentia
 
 ## Brower support for CSS modules
 
-Currently, no browser supports both CSS modules and import attributes, so a transform is needed to use them.
+As of December 2023, no browser supports both CSS modules and import attributes, so a transform is needed to use them.
 
 #### Chrome and Chromium browsers
 
@@ -172,6 +172,6 @@ Existing PostCSS Rollup plugins may rely on stylesheets being added to the globa
 
 We need to be careful that we don't encourage packages to publish non-standard CSS that requires the use of the transform, however. PostCSS transformation may belong in a separate plugin.
 
-### Transform import attributes to import assertions
+### Minify CSS
 
-To support Chrome version before they land import attribute support, we could transform just the import assertion syntax into import attributes.
+CSS minification might be the most common CSS transform, so it could be built in.
