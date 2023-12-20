@@ -32,7 +32,7 @@ document.adoptedStyleSheets.push(styles);
 ### Install
 
 ```
-npm i -D @justinfagnani/rollup-plugin-css-modules
+npm i -D rollup-plugin-css-modules
 ```
 
 ### Example Rollup cofig
