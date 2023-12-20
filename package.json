@@ -39,6 +39,14 @@
     "typescript": "^5.3.3",
     "wireit": "^0.14.1"
   },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "index.d.ts.map",
+    "index.js.map",
+    "src/",
+    "!src/test/"
+  ],
   "wireit": {
     "format": {
       "command": "prettier src/**/* --write"
