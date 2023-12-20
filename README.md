@@ -2,8 +2,6 @@
 
 Rollup support for standard CSS modules
 
-**Note: This package is not published to npm yet!**
-
 ## Standard CSS modules
 
 [CSS modules](https://web.dev/articles/css-module-scripts) are standard feature of the web platform that allow you to import CSS stylesheets into JavaScript with an `import` statement, just like other JavaScript modules, and now also JSON modules.
