@@ -1,0 +1,4 @@
+.foo {
+  content: "\n${x}`";
+  color: red;
+}

@@ -2,9 +2,9 @@
   "compilerOptions": {
     "incremental": true,
     "composite": true,
-    "tsBuildInfoFile": "./.tsbuildinfo",
+    "tsBuildInfoFile": "./.tsbuildinfo-browser-tests",
     "target": "es2022",
-    // "lib": [],
+    "lib": ["DOM", "DOM.Iterable", "es2022"],
     "module": "NodeNext",
     "rootDir": "./src",
     "moduleResolution": "NodeNext",
@@ -28,6 +28,6 @@
     // "skipDefaultLibCheck": true,
     // "skipLibCheck": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["src/test/browser/*"]
+  "include": ["src/test/browser/*.ts"],
+  "exclude": []
 }

@@ -7,6 +7,8 @@
   "scripts": {
     "build": "wireit",
     "test": "wireit",
+    "test:build": "wireit",
+    "test:browser": "wireit",
     "format": "wireit"
   },
   "keywords": [
@@ -26,7 +28,12 @@
   },
   "devDependencies": {
     "@rollup/plugin-virtual": "^3.0.2",
+    "@types/chai": "^4.3.11",
+    "@types/mocha": "^10.0.6",
     "@types/node": "^20.10.5",
+    "@web/test-runner": "^0.18.0",
+    "chai": "^5.0.0-rc.0",
+    "mocha": "^10.2.0",
     "prettier": "^3.1.1",
     "rollup": "^4.9.1",
     "typescript": "^5.3.3",
@@ -51,12 +58,64 @@
       ],
       "clean": "if-file-deleted"
     },
+    "build:browser-tests": {
+      "command": "rollup -c rollup-browser-tests.config.js",
+      "dependencies": [
+        "build:browser-tests:ts",
+        "build:browser-tests:copy"
+      ],
+      "files": [
+        "rollup-browser-tests.config.js"
+      ],
+      "output": [
+        "test/browser/test-js-module-bundle.js"
+      ]
+    },
+    "build:browser-tests:copy": {
+      "command": "cp src/test/browser/*.css test/browser/",
+      "files": [
+        "src/test/browser/*.css"
+      ],
+      "output": [
+        "test/browser/*.css"
+      ],
+      "clean": "if-file-deleted"
+    },
+    "build:browser-tests:ts": {
+      "command": "tsc --pretty -project tsconfig-browser-tests.json",
+      "files": [
+        "tsconfig-browser-tests.json",
+        "src/test/browser/**/*.ts"
+      ],
+      "output": [
+        "test/browser/*.{js,js.map,d.ts,d.ts.map}",
+        "!test/browser/test-js-module-bundle.js"
+      ],
+      "clean": "if-file-deleted"
+    },
     "test": {
-      "command": "node --test-reporter spec test/index_test.js",
+      "dependencies": [
+        "test:build",
+        "test:browser"
+      ]
+    },
+    "test:build": {
+      "command": "node --test-reporter spec test/build/*_test.js",
       "dependencies": [
         "build"
       ],
       "files": [],
+      "output": []
+    },
+    "test:browser": {
+      "command": "wtr test/browser/*_test.js",
+      "dependencies": [
+        "build",
+        "build:browser-tests"
+      ],
+      "files": [
+        "web-test-runner.config.js"
+      ],
       "output": []
     }
   }

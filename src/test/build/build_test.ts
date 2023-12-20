@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert';
 
-import {cssModules} from '../index.js';
+import {cssModules} from '../../index.js';
 import {rollup, type Plugin} from 'rollup';
 import virtualMod, {type RollupVirtualOptions} from '@rollup/plugin-virtual';
 

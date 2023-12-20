@@ -16,7 +16,6 @@ export const cssModules: PluginImpl = (): Plugin => {
     name: 'css-modules',
     transform(code, id) {
       const isCssModule = this.getModuleInfo(id)?.attributes.type === 'css';
-      console.log('css transform', id, isCssModule, code);
       if (isCssModule) {
         // Escape the CSS source so that it can be used in a template literal.
         const escapedCode = code
