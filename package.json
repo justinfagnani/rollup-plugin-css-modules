@@ -9,9 +9,21 @@
     "test": "wireit",
     "format": "wireit"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "CSS",
+    "modules",
+    "import",
+    "rollup",
+    "plugin",
+    "css-modules",
+    "native",
+    "standard"
+  ],
+  "author": "Justin Fagnani <justin@fagnani.com>",
   "license": "MIT",
+  "peerDependencies": {
+    "rollup": "^4.0.0"
+  },
   "devDependencies": {
     "@rollup/plugin-virtual": "^3.0.2",
     "@types/node": "^20.10.5",
