@@ -46,7 +46,7 @@
     "build": {
       "command": "tsc --pretty",
       "files": [
-        "tscopnfig.json",
+        "tsconfig.json",
         "src/**/*.ts"
       ],
       "output": [
