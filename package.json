@@ -23,6 +23,11 @@
   ],
   "author": "Justin Fagnani <justin@fagnani.com>",
   "license": "MIT",
+  "repository": "github:justinfagnani/rollup-plugin-css-modules",
+  "homepage": "https://github.com/justinfagnani/rollup-plugin-css-modules",
+  "bugs": {
+    "url": "https://github.com/justinfagnani/rollup-plugin-css-modules/issues"
+  },
   "peerDependencies": {
     "rollup": "^4.0.0"
   },
