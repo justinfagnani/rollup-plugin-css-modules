@@ -13,6 +13,7 @@ CSS modules have a single default export that is a `CSSStyleSheet` instance cont
 ### Example
 
 `styles.css`:
+
 ```css
 .foo {
   color: red;
@@ -20,6 +21,7 @@ CSS modules have a single default export that is a `CSSStyleSheet` instance cont
 ```
 
 `index.js`:
+
 ```js
 import styles from './styles.css' with {type: 'css'};
 document.adoptedStyleSheets.push(styles);
@@ -33,7 +35,7 @@ document.adoptedStyleSheets.push(styles);
 npm i -D rollup-plugin-css-modules
 ```
 
-### Example Rollup cofig
+### Example Rollup config
 
 `rollup.config.js`:
 
@@ -43,14 +45,28 @@ import {cssModules} from 'rollup-plugin-css-modules';
 export default {
   input: 'index.js',
   plugins: [cssModules()],
-  output: [{
-    file: 'bundle.js',
-    format: 'es'
-  }]
+  output: [
+    {
+      file: 'bundle.js',
+      format: 'es',
+    },
+  ],
 };
 ```
 
 The `cssModules()` plugin factory takes no options as of now. It may accepts options in the future.
+
+### TypeScript
+
+This package also provides a type that can be used to instruct TypeScript how to resolve CSS import statements:
+
+```json
+{
+  "compilerOptions": {
+    "types": ["rollup-plugin-css-modules/types"]
+  }
+}
+```
 
 ## How it works
 
@@ -59,6 +75,7 @@ The `cssModules()` plugin factory takes no options as of now. It may accepts opt
 The example files above are transformed to:
 
 `styles.css`:
+
 ```js
 const stylesheet = new CSSStyleSheet();
 stylesheet.replaceSync(`.foo {\n  color: red;\n}\n`);
@@ -66,6 +83,7 @@ export default stylesheet;
 ```
 
 `index.js`:
+
 ```js
 import styles from './styles.css';
 document.adoptedStyleSheets.push(styles);
@@ -81,7 +99,7 @@ While the transform is simple and spec compliant, there are two (small) potentia
 
 1. The CSS file can't be dynamic. This is a natural consequence of bundling. With native CSS modules you could import a CSS file from a remote URL or from a file path who's contents could change. With bundling the file is fixed at build time.
 2. The exact same CSS file can't be shared across JS imports and HTML imports. This is also a consequence of bundling. With native CSS modules you can load the CSS file in many different ways: import into JavaScript, with a `<link rel=stylesheet>` HTML tag, or some other CSS loader. With bundling you will have to leave a copy of the CSS as a plain .css file in order to load other ways.
-3. The CSS content is parsed as both JavaScript and CSS. This gives the transform a small performance and memory overhead compared to native CSS modules. On projects that use a similar technique of embedding plain CSS strings into JavaScript and creating `CSSStyleSheet` objects, the overhead was measured to be  small since parsing strings in JavaScript is very fast.
+3. The CSS content is parsed as both JavaScript and CSS. This gives the transform a small performance and memory overhead compared to native CSS modules. On projects that use a similar technique of embedding plain CSS strings into JavaScript and creating `CSSStyleSheet` objects, the overhead was measured to be small since parsing strings in JavaScript is very fast.
 4. Dynamic import isn't supported (yet).
 
 ## When to use
@@ -115,6 +133,7 @@ It's often better to let the browser parse resources in parallel with other work
 This is possible with top level await, so that the transformed module would look like:
 
 `styles.css`:
+
 ```js
 const stylesheet = new CSSStyleSheet();
 await stylesheet.replace(`.foo {\n  color: red;\n}\n`);
@@ -128,16 +147,18 @@ First, the performance impact should be measured. The top-level await will block
 Dynamic imports can be generically supported by transforming them into a `fetch()` call:
 
 `load-css.js`:
+
 ```ts
 const loadCSS = (url) => import(url);
 ```
 
 Can be tranformed to:
 `load-css.js`:
+
 ```ts
 const loadCSS = (url) => () => {
   // A cache of URL -> Promise<CSSSyleSheet>
-  const cache = globalThis._$CSSModuleCache ??= new Map();
+  const cache = (globalThis._$CSSModuleCache ??= new Map());
   const resolvedURL = new URL(url, import.meta.url).href;
   let stylesheet = cache.get(resolvedURL);
   if (stylesheet !== undefined) {
@@ -153,6 +174,7 @@ const loadCSS = (url) => () => {
   return promise;
 };
 ```
+
 _This is completely untested code_
 
 ### External CSS support
