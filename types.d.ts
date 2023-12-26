@@ -1,3 +1,4 @@
 declare module '*.css' {
-  export default CSSStyleSheet;
+  const stylesheet: CSSStyleSheet;
+  export default stylesheet;
 }
