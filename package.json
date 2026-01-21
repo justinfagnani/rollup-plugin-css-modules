@@ -9,7 +9,8 @@
     "test": "wireit",
     "test:build": "wireit",
     "test:browser": "wireit",
-    "format": "wireit"
+    "format": "wireit",
+    "serve:dev": "wireit"
   },
   "keywords": [
     "CSS",
@@ -130,6 +131,13 @@
         "web-test-runner.config.js"
       ],
       "output": []
+    },
+    "serve:dev": {
+      "command": "node test/server.js",
+      "service": true,
+      "dependencies": [
+        "build"
+      ]
     }
   }
 }

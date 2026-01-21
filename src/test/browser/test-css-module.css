@@ -1,4 +1,4 @@
 .foo {
-  content: "\n${x}`";
+  content: '\n${x}`';
   color: red;
 }

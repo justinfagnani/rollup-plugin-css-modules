@@ -1,6 +1,21 @@
 # rollup-plugin-css-modules
 
-Rollup support for standard CSS modules
+Rollup support for standard CSS modules.
+
+This plugin supports standard CSS modules imported with `{type: 'css'}` in one
+of two ways:
+
+1. Transforming the CSS moduels into JavaScript modules that export a
+   `CSSStyleSheet` instance.
+
+   This lets Rollup bundle that resulting JavaScript files, and supports
+   browsers that don't yet support native CSS module.
+
+2. Bundling all individual CSS modules into one CSS module bundle, and
+   extracting the individual modules at the import sites.
+
+   This let's you use native CSS module support, but still bundle your CSS to
+   avoid excess network requests.
 
 ## Standard CSS modules
 
@@ -33,7 +48,7 @@ document.adoptedStyleSheets.push(styles);
 npm i -D rollup-plugin-css-modules
 ```
 
-### Example Rollup cofig
+### Example Rollup config
 
 `rollup.config.js`:
 
@@ -51,6 +66,95 @@ export default {
 ```
 
 The `cssModules()` plugin factory takes no options as of now. It may accepts options in the future.
+
+## Options
+
+### `bundledSheet`
+
+When set, CSS files will be bundled into a single CSS file that uses `@supports sheet(name)` wrappers. This allows native CSS module support in browsers while still reducing network requests by bundling.
+
+This is useful for browsers that support native CSS modules (Chrome, Firefox) where you want the benefits of native CSS parsing but also want to bundle CSS files.
+
+**How it works:**
+
+1. All CSS module imports are collected and wrapped in `@supports sheet(filename.css)` rules
+2. A bundled CSS file is emitted as an asset
+3. JavaScript imports are transformed to use a helper function that extracts individual sheets at runtime
+
+**Example:**
+
+`rollup.config.js`:
+```js
+import {cssModules} from 'rollup-plugin-css-modules';
+
+export default {
+  input: 'index.js',
+  plugins: [cssModules({
+    bundledSheet: {
+      fileName: 'styles-bundle.css',  // optional, defaults to 'styles-bundle.css'
+    }
+  })],
+  output: [{
+    file: 'bundle.js',
+    format: 'es'
+  }]
+};
+```
+
+**Input files:**
+
+`a.css`:
+```css
+.foo { color: red; }
+```
+
+`b.css`:
+```css
+.bar { color: blue; }
+```
+
+`index.js`:
+```js
+import stylesA from './a.css' with {type: 'css'};
+import stylesB from './b.css' with {type: 'css'};
+```
+
+**Output:**
+
+`styles-bundle.css`:
+```css
+@supports sheet(a.css) {
+  .foo { color: red; }
+}
+
+@supports sheet(b.css) {
+  .bar { color: blue; }
+}
+```
+
+`bundle.js`:
+```js
+import bundledStyles from './styles-bundle.css' with { type: 'css' };
+
+const cachedSheets = new WeakMap();
+
+const getBundledSheet = (sheet, name) => {
+  // ... extracts rules from @supports sheet(name) wrapper
+};
+
+const stylesA = getBundledSheet(bundledStyles, 'a.css');
+const stylesB = getBundledSheet(bundledStyles, 'b.css');
+```
+
+The `@supports sheet(name)` syntax is a convention (not a real CSS feature) that allows us to bundle multiple stylesheets into a single file while keeping them separate at runtime. The `getBundledSheet` helper parses the bundled stylesheet and extracts the rules for each named sheet into a separate `CSSStyleSheet` object, caching the results for efficiency.
+
+**Caveat: Double CSS Parsing**
+
+With this option, CSS is parsed twice by the browser's CSS parser: once when loading the bundled CSS file, and again when extracting rules into individual `CSSStyleSheet` objects via `insertRule()`. 
+
+This differs from the default behavior (bundling CSS into JavaScript) where CSS content is embedded as JS strings. JS strings parse very fast—the JS parser just consumes characters until the end of the string, which is roughly 3-4x faster than average JS expression parsing.
+
+This option is primarily a proof of concept for the ["Multiple stylesheets per file" proposal](https://github.com/w3c/csswg-drafts/issues/5629). Production sites concerned with performance may prefer the default behavior of bundling CSS into JavaScript.
 
 ## How it works
 
@@ -158,10 +262,6 @@ _This is completely untested code_
 ### External CSS support
 
 Specifiers marked as external in the Rollup config are correctly left unmodified, but by transforming the CSS module to use `fetch()` and top-level await, we can load external CSS files.
-
-### Bundling CSS into CSS
-
-We can leave CSS external to the JavaScript bundle, in order to take enable the browser to directly parse the CSS, but still bundle all the CSS together while letting each import site receive just the `CSSStyleSheet` object it would have pre-transformation by using [this hack](https://github.com/w3c/csswg-drafts/issues/5629#issuecomment-1401322544) to bundle multiple CSS sheets into one file.
 
 ### PostCSS integration
 
