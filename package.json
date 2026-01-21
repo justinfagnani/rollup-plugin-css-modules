@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-css-modules",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Rollup support for standard CSS modules",
   "type": "module",
   "main": "index.js",
